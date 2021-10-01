@@ -1,0 +1,29 @@
+image: 'maven:latest'
+stages:
+  - test 
+  - build
+services:
+  - 'mysql'
+variables:
+    MONGO_DATABASENAME: "taskdb"
+    MONGO_URL: "jdbc:mysql://localhost:3306/taskdb"
+    
+cache:
+   paths:
+     - .m2/repository
+     - target
+     
+maven-test:
+   stage: test
+   script: "mvn test"
+   tags:
+    - MYREPOS_PROD_RUNNER
+    
+maven-build:
+    stage: build
+    script: 'mvn package'
+    tags:
+    - MYREPOS_PROD_RUNNER
+    artifacts:
+      paths: 
+        - target/*.jar
